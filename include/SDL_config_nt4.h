@@ -6,6 +6,11 @@
 #define SDL_config_nt4_h_
 #define SDL_config_h_
 
+/* MSVC 4.0 lacks __FUNCTION__ */
+#ifndef __FUNCTION__
+#define __FUNCTION__ ""
+#endif
+
 #include "SDL_platform.h"
 
 /* MSVC 4.0 stdint types */
@@ -21,14 +26,6 @@ typedef unsigned __int64 uint64_t;
 typedef unsigned int uintptr_t;
 #define _UINTPTR_T_DEFINED
 #endif
-
-/* MSVC 4.0 lacks __FUNCTION__, __forceinline, __declspec(deprecated/noreturn) */
-#ifndef __FUNCTION__
-#define __FUNCTION__ ""
-#endif
-#define SDL_FORCE_INLINE static __inline
-#define SDL_DEPRECATED
-#define SDL_NORETURN
 
 #define SIZEOF_VOIDP 4
 

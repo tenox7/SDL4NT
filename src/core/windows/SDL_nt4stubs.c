@@ -9,8 +9,14 @@
 #include "SDL_windows.h"
 
 /* Intrinsics that MSVC 4.0 doesn't have */
-void _mm_pause(void) { }
-void __debugbreak(void) { __asm { int 3 } }
+void _mm_pause(void)
+{
+}
+
+void __debugbreak(void)
+{
+    DebugBreak();
+}
 
 unsigned char _BitScanReverse(unsigned long *idx, unsigned long mask)
 {
@@ -25,15 +31,9 @@ unsigned char _BitScanReverse(unsigned long *idx, unsigned long mask)
 
 LONG __cdecl InterlockedCompareExchange(LONG volatile *dest, LONG exchange, LONG comperand)
 {
-    LONG ret;
-    __asm {
-        mov ecx, dest
-        mov eax, comperand
-        mov edx, exchange
-        lock cmpxchg [ecx], edx
-        mov ret, eax
-    }
-    return ret;
+    LONG old = *dest;
+    if (*dest == comperand) *dest = exchange;
+    return old;
 }
 
 /* Multi-monitor stubs - fake single monitor */

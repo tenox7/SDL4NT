@@ -36,7 +36,7 @@
 #ifndef SDL_DEPRECATED
 #  if defined(__GNUC__) && (__GNUC__ >= 4)  /* technically, this arrived in gcc 3.1, but oh well. */
 #    define SDL_DEPRECATED __attribute__((deprecated))
-#  elif defined(_MSC_VER)
+#  elif defined(_MSC_VER) && (_MSC_VER >= 1200)
 #    define SDL_DEPRECATED __declspec(deprecated)
 #  else
 #    define SDL_DEPRECATED
@@ -137,8 +137,10 @@
 #endif /* SDL_INLINE not defined */
 
 #ifndef SDL_FORCE_INLINE
-#if defined(_MSC_VER)
+#if defined(_MSC_VER) && (_MSC_VER >= 1200)
 #define SDL_FORCE_INLINE __forceinline
+#elif defined(_MSC_VER)
+#define SDL_FORCE_INLINE static __inline
 #elif ( (defined(__GNUC__) && (__GNUC__ >= 4)) || defined(__clang__) )
 #define SDL_FORCE_INLINE __attribute__((always_inline)) static __inline__
 #else
@@ -149,7 +151,7 @@
 #ifndef SDL_NORETURN
 #if defined(__GNUC__)
 #define SDL_NORETURN __attribute__((noreturn))
-#elif defined(_MSC_VER)
+#elif defined(_MSC_VER) && (_MSC_VER >= 1200)
 #define SDL_NORETURN __declspec(noreturn)
 #else
 #define SDL_NORETURN
