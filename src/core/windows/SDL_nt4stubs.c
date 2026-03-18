@@ -29,7 +29,7 @@ unsigned char _BitScanReverse(unsigned long *idx, unsigned long mask)
     return 1;
 }
 
-LONG __cdecl InterlockedCompareExchange(LONG volatile *dest, LONG exchange, LONG comperand)
+LONG __cdecl SDL_NT4_InterlockedCompareExchange(LONG volatile *dest, LONG exchange, LONG comperand)
 {
     LONG old = *dest;
     if (*dest == comperand) *dest = exchange;
@@ -84,7 +84,7 @@ BOOL EnumDisplayDevicesW(LPCWSTR lpDevice, DWORD iDevNum, DISPLAY_DEVICEW *lpDis
     return TRUE;
 }
 
-LONG ChangeDisplaySettingsExW(LPCWSTR lpszDeviceName, DEVMODEW *lpDevMode, HWND hwnd, DWORD dwflags, LPVOID lParam)
+LONG SDL_NT4_ChangeDisplaySettingsExW(LPCWSTR lpszDeviceName, DEVMODEW *lpDevMode, HWND hwnd, DWORD dwflags, LPVOID lParam)
 {
     return ChangeDisplaySettingsW(lpDevMode, dwflags);
 }
@@ -104,7 +104,7 @@ BOOL RegisterRawInputDevices(const RAWINPUTDEVICE *pRawInputDevices, UINT uiNumD
 }
 
 /* Mouse tracking */
-BOOL TrackMouseEvent(LPTRACKMOUSEEVENT lpEventTrack) { return FALSE; }
+BOOL SDL_NT4_TrackMouseEvent(LPTRACKMOUSEEVENT lpEventTrack) { return FALSE; }
 
 /* Window extras */
 BOOL SetLayeredWindowAttributes(HWND hwnd, COLORREF crKey, BYTE bAlpha, DWORD dwFlags) { return FALSE; }
@@ -148,14 +148,14 @@ BOOL InitializeCriticalSectionAndSpinCount(CRITICAL_SECTION *lpCriticalSection, 
     return TRUE;
 }
 
-BOOL TryEnterCriticalSection(CRITICAL_SECTION *lpCriticalSection)
+BOOL SDL_NT4_TryEnterCriticalSection(CRITICAL_SECTION *lpCriticalSection)
 {
     EnterCriticalSection(lpCriticalSection);
     return TRUE;
 }
 
 /* COM */
-HRESULT CoInitializeEx(LPVOID pvReserved, DWORD dwCoInit)
+HRESULT SDL_NT4_CoInitializeEx(LPVOID pvReserved, DWORD dwCoInit)
 {
     return CoInitialize(pvReserved);
 }

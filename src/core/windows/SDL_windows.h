@@ -230,6 +230,13 @@ typedef struct {
 #define FLASHW_TRAY 0x00000002
 #define FLASHW_TIMERNOFG 0x0000000C
 #endif
+/* Redirect missing NT4 APIs to our stubs (macros only, decls below) */
+#define TryEnterCriticalSection SDL_NT4_TryEnterCriticalSection
+#define InterlockedCompareExchange SDL_NT4_InterlockedCompareExchange
+#define TrackMouseEvent SDL_NT4_TrackMouseEvent
+#define ChangeDisplaySettingsExW SDL_NT4_ChangeDisplaySettingsExW
+#define CoInitializeEx SDL_NT4_CoInitializeEx
+
 #ifndef LOCALE_SISO639LANGNAME
 #define LOCALE_SISO639LANGNAME 0x00000059
 #define LOCALE_SISO3166CTRYNAME 0x0000005A
@@ -420,6 +427,12 @@ typedef struct _DISPLAY_DEVICEW {
 #ifndef ENUM_CURRENT_SETTINGS
 #define ENUM_CURRENT_SETTINGS ((DWORD)-1)
 #endif
+
+BOOL SDL_NT4_TryEnterCriticalSection(CRITICAL_SECTION *);
+LONG __cdecl SDL_NT4_InterlockedCompareExchange(LONG volatile *, LONG, LONG);
+BOOL SDL_NT4_TrackMouseEvent(LPTRACKMOUSEEVENT);
+LONG SDL_NT4_ChangeDisplaySettingsExW(LPCWSTR, DEVMODEW *, HWND, DWORD, LPVOID);
+HRESULT SDL_NT4_CoInitializeEx(LPVOID, DWORD);
 #endif
 
 #include "SDL_rect.h"
