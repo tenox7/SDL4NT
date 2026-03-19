@@ -98,15 +98,23 @@ int WIN_CreateWindowFramebuffer(_THIS, SDL_Window *window, Uint32 *format, void 
     return 0;
 }
 
+__declspec(dllexport) HPALETTE g_sdl_display_palette = NULL;
+
 int WIN_UpdateWindowFramebuffer(_THIS, SDL_Window *window, const SDL_Rect *rects, int numrects)
 {
     SDL_WindowData *data = (SDL_WindowData *)window->driverdata;
+    HPALETTE hOld = NULL;
     int i;
 
+    if (g_sdl_display_palette) {
+        hOld = SelectPalette(data->hdc, g_sdl_display_palette, FALSE);
+        RealizePalette(data->hdc);
+    }
     for (i = 0; i < numrects; ++i) {
         BitBlt(data->hdc, rects[i].x, rects[i].y, rects[i].w, rects[i].h,
                data->mdc, rects[i].x, rects[i].y, SRCCOPY);
     }
+    if (hOld) SelectPalette(data->hdc, hOld, FALSE);
     return 0;
 }
 
