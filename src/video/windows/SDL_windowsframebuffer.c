@@ -98,7 +98,7 @@ int WIN_CreateWindowFramebuffer(_THIS, SDL_Window *window, Uint32 *format, void 
     return 0;
 }
 
-__declspec(dllexport) HPALETTE g_sdl_display_palette = NULL;
+HPALETTE g_sdl_display_palette = NULL;
 
 int WIN_UpdateWindowFramebuffer(_THIS, SDL_Window *window, const SDL_Rect *rects, int numrects)
 {
