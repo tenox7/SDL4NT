@@ -36,7 +36,7 @@
 #include <unixlib/local.h>
 #endif
 
-#if defined(_MSC_VER) && (defined(_M_IX86) || defined(_M_X64))
+#if defined(_MSC_VER) && (defined(_M_IX86) || defined(_M_X64)) && !defined(SDL_BUILD_NT4)
 #include <xmmintrin.h>
 #endif
 
@@ -193,7 +193,9 @@ void SDL_AtomicUnlock(SDL_SpinLock *lock)
     _InterlockedExchange_rel(lock, 0);
 
 #elif defined(_MSC_VER)
+#ifndef SDL_BUILD_NT4
     _ReadWriteBarrier();
+#endif
     *lock = 0;
 
 #elif defined(__WATCOMC__) && defined(__386__)

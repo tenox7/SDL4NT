@@ -263,7 +263,8 @@ done:
     __asm { \
         __asm mov eax, func \
         __asm xor ecx, ecx \
-        __asm cpuid \
+        __asm _emit 0x0f \
+        __asm _emit 0xa2 \
         __asm mov a, eax \
         __asm mov b, ebx \
         __asm mov c, ecx \
@@ -1132,11 +1133,17 @@ int SDL_GetSystemRAM(void)
 #endif
 #if defined(__WIN32__) || defined(__GDK__)
         if (SDL_SystemRAM <= 0) {
+#ifdef SDL_BUILD_NT4
+            MEMORYSTATUS stat;
+            GlobalMemoryStatus(&stat);
+            SDL_SystemRAM = (int)(stat.dwTotalPhys / (1024 * 1024));
+#else
             MEMORYSTATUSEX stat;
             stat.dwLength = sizeof(stat);
             if (GlobalMemoryStatusEx(&stat)) {
                 SDL_SystemRAM = (int)(stat.ullTotalPhys / (1024 * 1024));
             }
+#endif
         }
 #endif
 #ifdef __OS2__

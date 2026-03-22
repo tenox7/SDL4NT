@@ -120,6 +120,9 @@ static void WIN_UpdateDisplayMode(_THIS, LPCWSTR deviceName, DWORD index, SDL_Di
 
 static SDL_DisplayOrientation WIN_GetDisplayOrientation(DEVMODE *mode)
 {
+#ifdef SDL_BUILD_NT4
+    return SDL_ORIENTATION_UNKNOWN;
+#else
     int width = mode->dmPelsWidth;
     int height = mode->dmPelsHeight;
 
@@ -157,6 +160,7 @@ static SDL_DisplayOrientation WIN_GetDisplayOrientation(DEVMODE *mode)
             return SDL_ORIENTATION_UNKNOWN;
         }
     }
+#endif
 }
 
 static SDL_bool WIN_GetDisplayMode(_THIS, LPCWSTR deviceName, DWORD index, SDL_DisplayMode *mode, SDL_DisplayOrientation *orientation)

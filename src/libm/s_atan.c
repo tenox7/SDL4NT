@@ -60,13 +60,13 @@ static const double aT[] = {
   1.62858201153657823623e-02, /* 0x3F90AD3A, 0xE322DA11 */
 };
 
-#ifdef __WATCOMC__ /* Watcom defines huge=__huge */
-#undef huge
+#if defined(__WATCOMC__) || defined(SDL_BUILD_NT4)
+#undef hugeval
 #endif
 
 static const double
 one   = 1.0,
-huge   = 1.0e300;
+hugeval   = 1.0e300;
 
 double atan(double x)
 {
@@ -85,7 +85,7 @@ double atan(double x)
 	    else     return -atanhi[3]-atanlo[3];
 	} if (ix < 0x3fdc0000) {	/* |x| < 0.4375 */
 	    if (ix < 0x3e200000) {	/* |x| < 2^-29 */
-		if(huge+x>one) return x;	/* raise inexact */
+		if(hugeval+x>one) return x;	/* raise inexact */
 	    }
 	    id = -1;
 	} else {

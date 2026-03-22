@@ -20,14 +20,14 @@
 #include "math_private.h"
 #include <limits.h>
 
-#ifdef __WATCOMC__ /* Watcom defines huge=__huge */
-#undef huge
+#if defined(__WATCOMC__) || defined(SDL_BUILD_NT4)
+#undef hugeval
 #endif
 
 static const double
 two54  = 1.80143985094819840000e+16, /* 0x43500000, 0x00000000 */
 twom54 = 5.55111512312578270212e-17, /* 0x3C900000, 0x00000000 */
-huge   = 1.0e+300,
+hugeval   = 1.0e+300,
 tiny   = 1.0e-300;
 
 double scalbln(double x, long n)
@@ -47,7 +47,7 @@ double scalbln(double x, long n)
 		return x + x; /* NaN or Inf */
 	k = (int32_t)(k + n);
 	if (k > 0x7fe)
-		return huge * copysign(huge, x); /* overflow */
+		return hugeval * copysign(hugeval, x); /* overflow */
 	if (n < -50000)
 		return tiny * copysign(tiny, x); /* underflow */
 	if (k > 0) { /* normal result */
@@ -56,7 +56,7 @@ double scalbln(double x, long n)
 	}
 	if (k <= -54) {
 		if (n > 50000) /* in case integer overflow in n+k */
-			return huge * copysign(huge, x); /* overflow */
+			return hugeval * copysign(hugeval, x); /* overflow */
 		return tiny * copysign(tiny, x); /* underflow */
 	}
 	k += 54; /* subnormal result */

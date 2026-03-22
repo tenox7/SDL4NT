@@ -69,6 +69,8 @@
 #define SDL_DYNAMIC_API 0 /* devkitARM doesn't support dynamic linking */
 #elif defined(DYNAPI_NEEDS_DLOPEN) && !defined(HAVE_DLOPEN)
 #define SDL_DYNAMIC_API 0 /* we need dlopen(), but don't have it.... */
+#elif defined(SDL_BUILD_NT4)
+#define SDL_DYNAMIC_API 0
 #endif
 
 /* everyone else. This is where we turn on the API if nothing forced it off. */

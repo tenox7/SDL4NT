@@ -63,8 +63,8 @@
 #pragma warning ( disable : 4756 )
 #endif
 
-#ifdef __WATCOMC__ /* Watcom defines huge=__huge */
-#undef huge
+#if defined(__WATCOMC__) || defined(SDL_BUILD_NT4)
+#undef hugeval
 #endif
 
 static const double
@@ -75,7 +75,7 @@ zero    =  0.0,
 one	=  1.0,
 two	=  2.0,
 two53	=  9007199254740992.0,	/* 0x43400000, 0x00000000 */
-huge	=  1.0e300,
+hugeval	=  1.0e300,
 tiny    =  1.0e-300,
 	/* poly coefs for (3/2)*(log(x)-2s-2/3*s**3 */
 L1  =  5.99999999999994648725e-01, /* 0x3FE33333, 0x33333303 */
@@ -185,15 +185,15 @@ double attribute_hidden __ieee754_pow(double x, double y)
     /* (x<0)**(non-int) is NaN */
 	if(((((u_int32_t)hx>>31)-1)|yisint)==0) return (x-x)/(x-x);
 
-    /* |y| is huge */
+    /* |y| is hugeval */
 	if(iy>0x41e00000) { /* if |y| > 2**31 */
 	    if(iy>0x43f00000){	/* if |y| > 2**64, must o/uflow */
-		if(ix<=0x3fefffff) return (hy<0)? huge*huge:tiny*tiny;
-		if(ix>=0x3ff00000) return (hy>0)? huge*huge:tiny*tiny;
+		if(ix<=0x3fefffff) return (hy<0)? hugeval*hugeval:tiny*tiny;
+		if(ix>=0x3ff00000) return (hy>0)? hugeval*hugeval:tiny*tiny;
 	    }
 	/* over/underflow if x is not close to one */
-	    if(ix<0x3fefffff) return (hy<0)? huge*huge:tiny*tiny;
-	    if(ix>0x3ff00000) return (hy>0)? huge*huge:tiny*tiny;
+	    if(ix<0x3fefffff) return (hy<0)? hugeval*hugeval:tiny*tiny;
+	    if(ix>0x3ff00000) return (hy>0)? hugeval*hugeval:tiny*tiny;
 	/* now |1-x| is tiny <= 2**-20, suffice to compute
 	   log(x) by x-x^2/2+x^3/3-x^4/4 */
 	    t = x-1;		/* t has 20 trailing zeros */
@@ -266,9 +266,9 @@ double attribute_hidden __ieee754_pow(double x, double y)
 	EXTRACT_WORDS(j,i,z);
 	if (j>=0x40900000) {				/* z >= 1024 */
 	    if(((j-0x40900000)|i)!=0)			/* if z > 1024 */
-		return s*huge*huge;			/* overflow */
+		return s*hugeval*hugeval;			/* overflow */
 	    else {
-		if(p_l+ovt>z-p_h) return s*huge*huge;	/* overflow */
+		if(p_l+ovt>z-p_h) return s*hugeval*hugeval;	/* overflow */
 	    }
 	} else if((j&0x7fffffff)>=0x4090cc00 ) {	/* z <= -1075 */
 	    if(((j-0xc090cc00)|i)!=0) 		/* z < -1075 */

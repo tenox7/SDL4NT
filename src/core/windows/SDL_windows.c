@@ -179,6 +179,20 @@ void WIN_RoUninitialize(void)
 }
 
 #if !defined(__WINRT__) && !defined(__XBOXONE__) && !defined(__XBOXSERIES__)
+#ifdef SDL_BUILD_NT4
+static BOOL IsWindowsVersionOrGreater(WORD wMajorVersion, WORD wMinorVersion, WORD wServicePackMajor)
+{
+    OSVERSIONINFOW osvi;
+    SDL_zero(osvi);
+    osvi.dwOSVersionInfoSize = sizeof(osvi);
+    if (!GetVersionExW(&osvi)) return FALSE;
+    if (osvi.dwMajorVersion > wMajorVersion) return TRUE;
+    if (osvi.dwMajorVersion < wMajorVersion) return FALSE;
+    if (osvi.dwMinorVersion > wMinorVersion) return TRUE;
+    if (osvi.dwMinorVersion < wMinorVersion) return FALSE;
+    return TRUE;
+}
+#else
 static BOOL IsWindowsVersionOrGreater(WORD wMajorVersion, WORD wMinorVersion, WORD wServicePackMajor)
 {
     OSVERSIONINFOEXW osvi;
@@ -197,6 +211,7 @@ static BOOL IsWindowsVersionOrGreater(WORD wMajorVersion, WORD wMinorVersion, WO
 
     return VerifyVersionInfoW(&osvi, VER_MAJORVERSION | VER_MINORVERSION | VER_SERVICEPACKMAJOR, dwlConditionMask) != FALSE;
 }
+#endif
 #endif
 
 BOOL WIN_IsWine(void)

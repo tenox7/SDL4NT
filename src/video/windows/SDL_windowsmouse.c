@@ -93,13 +93,22 @@ static SDL_Cursor *WIN_CreateCursor(SDL_Surface *surface, int hot_x, int hot_y)
     HICON hicon;
     HICON hcursor;
     HDC hdc;
-    BITMAPV4HEADER bmh;
     LPVOID pixels;
     LPVOID maskbits;
     size_t maskbitslen;
     SDL_bool isstack;
     ICONINFO ii;
-
+#ifdef SDL_BUILD_NT4
+    BITMAPINFOHEADER bmh;
+    SDL_zero(bmh);
+    bmh.biSize = sizeof(bmh);
+    bmh.biWidth = surface->w;
+    bmh.biHeight = -surface->h;
+    bmh.biPlanes = 1;
+    bmh.biBitCount = 32;
+    bmh.biCompression = BI_RGB;
+#else
+    BITMAPV4HEADER bmh;
     SDL_zero(bmh);
     bmh.bV4Size = sizeof(bmh);
     bmh.bV4Width = surface->w;
@@ -111,6 +120,7 @@ static SDL_Cursor *WIN_CreateCursor(SDL_Surface *surface, int hot_x, int hot_y)
     bmh.bV4RedMask = 0x00FF0000;
     bmh.bV4GreenMask = 0x0000FF00;
     bmh.bV4BlueMask = 0x000000FF;
+#endif
 
     maskbitslen = ((surface->w + (pad - (surface->w % pad))) / 8) * surface->h;
     maskbits = SDL_small_alloc(Uint8, maskbitslen, &isstack);

@@ -471,7 +471,7 @@ void WIN_VideoQuit(_THIS)
 #endif
 }
 
-#if !defined(__XBOXONE__) && !defined(__XBOXSERIES__)
+#if !defined(__XBOXONE__) && !defined(__XBOXSERIES__) && !defined(SDL_BUILD_NT4)
 #define D3D_DEBUG_INFO
 #include <d3d9.h>
 

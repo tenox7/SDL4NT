@@ -75,14 +75,14 @@
 #include "math_libm.h"
 #include "math_private.h"
 
-#ifdef __WATCOMC__ /* Watcom defines huge=__huge */
-#undef huge
+#if defined(__WATCOMC__) || defined(SDL_BUILD_NT4)
+#undef hugeval
 #endif
 
 static const double
 one	= 1.0,
 halF[2]	= {0.5,-0.5,},
-huge	= 1.0e+300,
+hugeval	= 1.0e+300,
 twom1000= 9.33263618503218878990e-302,     /* 2**-1000=0x01700000,0*/
 o_threshold=  7.09782712893383973096e+02,  /* 0x40862E42, 0xFEFA39EF */
 u_threshold= -7.45133219101941108420e+02,  /* 0xc0874910, 0xD52D3051 */
@@ -122,8 +122,8 @@ double __ieee754_exp(double x)	/* default IEEE double exp */
 		else return (xsb==0)? x:0.0;	/* exp(+-inf)={inf,0} */
 	    }
 		#if 1
-		if(x > o_threshold) return huge*huge; /* overflow */
-		#else  /* !!! FIXME: check this: "huge * huge" is a compiler warning, maybe they wanted +Inf? */
+		if(x > o_threshold) return hugeval*hugeval; /* overflow */
+		#else  /* !!! FIXME: check this: "hugeval * hugeval" is a compiler warning, maybe they wanted +Inf? */
 		if(x > o_threshold) return INFINITY; /* overflow */
 		#endif
 
@@ -143,7 +143,7 @@ double __ieee754_exp(double x)	/* default IEEE double exp */
 	    x  = hi - lo;
 	}
 	else if(hx < 0x3e300000)  {	/* when |x|<2**-28 */
-	    if(huge+x>one) return one+x;/* trigger inexact */
+	    if(hugeval+x>one) return one+x;/* trigger inexact */
 	}
 	else k = 0;
 
